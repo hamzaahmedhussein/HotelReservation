@@ -1,0 +1,167 @@
+﻿@model HotelReservation.ViewModels.HomePagePagedResult<HotelReservation.ViewModels.RoomViewModel>
+
+@{
+    ViewData["Title"] = "Rooms";
+}
+
+<h2>Rooms</h2>
+
+<form method="get" asp-controller="Home" asp-action="Index">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="Address">Address</label>
+                    <input type="text" class="form-control" id="Address" name="Address" value="@Model.Filter.Address" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="City">City</label>
+                    <input type="text" class="form-control" id="City" name="City" value="@Model.Filter.City" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="State">State</label>
+                    <input type="text" class="form-control" id="State" name="State" value="@Model.Filter.State" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="BedsNumber">Beds Number</label>
+                    <input type="number" class="form-control" id="BedsNumber" name="BedsNumber" value="@Model.Filter.BedsNumber" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="PricePerNight">Price Per Night</label>
+                    <input type="number" class="form-control" id="PricePerNight" name="PricePerNight" value="@Model.Filter.PricePerNight" step="0.01" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="CheckInDate">Check In Date</label>
+                    <input type="date" class="form-control" id="CheckInDate" name="CheckInDate" value="@Model.Filter.CheckInDate.ToString("yyyy-MM-dd")" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="CheckOutDate">Check Out Date</label>
+                    <input type="date" class="form-control" id="CheckOutDate" name="CheckOutDate" value="@Model.Filter.CheckOutDate.ToString("yyyy-MM-dd")" />
+                </div>
+            </div>
+            <div class="col-md-3 d-flex justify-content-center align-items-center">
+                <button type="submit" class="btn btn-primary ">Filter</button>
+            </div>
+        </div>
+        <input type="hidden" name="PageNumber" value="@Model.CurrentPage" />
+        <input type="hidden" name="PageSize" value="@Model.PageSize" />
+       
+    </div>
+</form>
+
+
+<<style>
+     .card {
+         height: 100%;
+         display: flex;
+         flex-direction: column;
+     }
+
+     .card-img-top {
+         height: 200px;
+         object-fit: cover;
+         width: 100%;
+     }
+
+     .card-body {
+         flex: 1;
+     }
+</style>
+
+<style>
+    .card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    .card-body {
+        flex: 1;
+    }
+
+    .btn-reserve {
+        margin-top: auto; /* Pushes the button to the bottom of the card */
+    }
+</style>
+
+
+<div class="container">
+    <div class="row">
+        @foreach (var room in Model.Results)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    @if (room.RoomPicture != null && room.RoomPicture.Length > 0)
+                    {
+                        var base64Image = Convert.ToBase64String(room.RoomPicture);
+                        <img src="data:image/jpeg;base64,@base64Image" class="card-img-top" alt="Room Picture">
+                    }
+                    else
+                    {
+                        <div class="card-img-top d-flex justify-content-center align-items-center" style="height: 200px; background-color: #f0f0f0;">
+                            <span class="text-muted">No Image</span>
+                        </div>
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">Room Number: @room.RoomNumber</h5>
+                        <p class="card-text">Beds Number: @room.BedsNumber</p>
+                        <p class="card-text">Price Per Night: @room.PricePerNight</p>
+                        <a href="@Url.Action("CreateReservation", "Customer", new { id = room.Id })" class="btn btn-primary btn-reserve">Add Reservation</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+
+
+<nav>
+    <ul class="pagination">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a class="page-link" href="@Url.Action("Index", new { Filter = Model.Filter, PageNumber = i, PageSize = Model.PageSize })">@i</a>
+            </li>
+        }
+    </ul>
+</nav>
+
+<style>
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .btn-primary {
+        margin-top: 15px;
+    }
+
+    .table {
+        margin-top: 30px;
+    }
+
+    .pagination {
+        justify-content: center;
+        margin-top: 30px;
+    }
+</style>

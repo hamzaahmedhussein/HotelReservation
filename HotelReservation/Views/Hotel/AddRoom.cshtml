@@ -1,0 +1,52 @@
+﻿@model HotelReservation.ViewModels.AddRoomViewModel
+
+@{
+    ViewData["Title"] = "AddRoom";
+}
+
+<h1>Add Room</h1>
+
+<h4>Add Room Form</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddRoom" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mt-2">
+                <label asp-for="RoomNumber" class="control-label"></label>
+                <input asp-for="RoomNumber" class="form-control" />
+                <span asp-validation-for="RoomNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <label asp-for="BedsNumber" class="control-label"></label>
+                <input asp-for="BedsNumber" class="form-control" />
+                <span asp-validation-for="BedsNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <label asp-for="PricePerNight" class="control-label"></label>
+                <input asp-for="PricePerNight" class="form-control" />
+                <span asp-validation-for="PricePerNight" class="text-danger"></span>
+            </div>
+          
+            <div class="form-group mt-2">
+                <label asp-for="RoomPicture" class="control-label"></label>
+                <input asp-for="RoomPicture" type="file" class="form-control-file" />
+                <span asp-validation-for="RoomPicture" class="text-danger"></span>
+            </div>
+          
+            <div class="form-group m-2">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

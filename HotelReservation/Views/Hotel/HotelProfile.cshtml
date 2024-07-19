@@ -1,0 +1,20 @@
+﻿@model HotelReservation.ViewModels.HotelProfileViewModel
+
+
+<h1>Hotel Profile</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10">
+            @await Html.PartialAsync("_HotelProfilePartial", Model.Hotel)
+        </div>
+        <div class="col-lg-4">
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            @await Html.PartialAsync("_RoomListPartial", Model.Rooms)
+        </div>
+    </div>
+</div>

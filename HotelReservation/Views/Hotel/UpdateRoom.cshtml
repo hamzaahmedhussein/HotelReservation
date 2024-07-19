@@ -1,0 +1,24 @@
+﻿@model HotelReservation.ViewModels.UpdateRoomViewModel
+
+<form asp-action="UpdateRoom" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    
+    <div class="form-group">
+        <label asp-for="RoomNumber"></label>
+        <input asp-for="RoomNumber" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="BedsNumber"></label>
+        <input asp-for="BedsNumber" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="PricePerNight"></label>
+        <input asp-for="PricePerNight" class="form-control" />
+    </div>
+  
+    <div class="form-group">
+        <label asp-for="RoomPicture"></label>
+        <input asp-for="RoomPicture" class="form-control" type="file" />
+    </div>
+    <button type="submit" class="btn btn-primary">Update Room</button>
+</form>
