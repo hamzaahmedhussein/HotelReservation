@@ -14,12 +14,3 @@ A web application built using ASP.NET MVC for managing hotel reservations. This 
 - **Database:** MS SQL Server
 - **Authentication:** ASP.NET Identity
 
-## Getting Started
-
-### Prerequisites
-
-- .NET SDK (version 6.0 or higher)
-- MS SQL Server
-- Visual Studio or any other .NET-compatible IDE
-
-
