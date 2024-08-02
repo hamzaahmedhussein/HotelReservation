@@ -10,10 +10,12 @@
 
 <style>
     .room-card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
         transition: box-shadow 0.3s ease;
         border: 1px solid #dee2e6;
         border-radius: 8px;
-        height: 100%;
     }
 
         .room-card:hover {
@@ -26,55 +28,15 @@
     }
 
     .btn-action {
-        margin-top: 5px;
-    }
-
-    .room-image {
-        height: 200px; /* Adjust image height */
-        object-fit: cover;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-    }
-
-    .room-details {
-        padding: 1rem;
-    }
-
-    .room-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 10px;
-    }
-</style>
-
-<style>
-    .room-card {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-
-    .room-image {
-        height: 200px;
-        object-fit: cover;
-        width: 100%;
-    }
-
-    .room-details {
-        flex: 1;
-        padding: 1rem;
-    }
-
-    .room-actions {
-        padding: 1rem;
-        text-align: center;
-    }
-
-    .btn-action {
         margin: 0.5rem;
         color: #fff;
+        opacity: 0.9;
+        transition: opacity 0.2s;
     }
+
+        .btn-action:hover {
+            opacity: 1;
+        }
 
     .btn-details {
         background-color: #007bff; /* Blue */
@@ -92,16 +54,35 @@
         background-color: #ffc107; /* Yellow */
     }
 
-    .btn-action:hover {
-        opacity: 0.9;
+    .room-image {
+        height: 200px; /* Adjust image height */
+        object-fit: cover;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        width: 100%;
+    }
+
+    .room-details {
+        flex: 1;
+        padding: 1rem;
+    }
+
+    .room-actions {
+        padding: 1rem;
+        text-align: center;
     }
 </style>
 
 <div>
     <h3>Rooms</h3>
-    <div class="text-center mt-2">
-        <a href="https://localhost:7193/hotel/addroom" class="btn btn-success">Add Room</a>
-    </div>
+
+    @if (hotel != null)
+    {
+        <div class="text-center mt-2" style="display:flex;justify-content:start; padding:10px">
+            <a href="@Url.Action("AddRoom", "Hotel")" class="btn btn-success">Add Room</a>
+        </div>
+    }
+
     <div class="row">
         @foreach (var room in Model.Results)
         {
@@ -126,27 +107,20 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        var isOwner = false;
-                        @if(hotel!=null)
-                        {
-                             isOwner = room.HotelId == hotel.Id;
+                        var isOwner = hotel != null && room.HotelId == hotel.Id;
 
-                        }
-
-                if (isOwner)
-                        {
-                            <div class="room-actions">
-                                @Html.ActionLink("Details", "RoomDetails", "Hotel", new { roomId = room.Id }, new { @class = "btn btn-action btn-details" })
-                                @Html.ActionLink("Update", "UpdateRoom", "Hotel", new { roomId = room.Id }, new { @class = "btn btn-action btn-update" })
-                                @Html.ActionLink("Delete", "DeleteRoom", "Hotel", new { roomId = room.Id }, new { @class = "btn btn-action btn-delete" })
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="room-actions">
-                                @Html.ActionLink("Add Reservation", "CreateReservation", "Customer", new { id = room.Id }, new { @class = "btn btn-action btn-reserve" })
-                            </div>
-                        }
+                        <div class="room-actions">
+                            @if (isOwner)
+                            {
+                                <a href="@Url.Action("RoomDetails", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-details">Details</a>
+                                <a href="@Url.Action("UpdateRoom", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-update">Update</a>
+                                <a href="@Url.Action("DeleteRoom", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-delete">Delete</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("CreateReservation", "Customer", new { id = room.Id })" class="btn btn-action btn-reserve">Add Reservation</a>
+                            }
+                        </div>
                     }
                 </div>
             </div>

@@ -19,18 +19,17 @@ namespace HotelReservation.Controllers
         }
 
 
-
         [HttpGet("Profile/{id?}")]
         public async Task<IActionResult> CustomerProfile(int? id, int pageNumber = 1, int pageSize = 6)
         {
             User Customer = null;
 
-            // Fetch hotel profile information based on id or current user
+            // Fetch customer profile information based on id or current user
             if (id.HasValue)
             {
                 Customer = await _context.Users
-                                      .Include(c => c.Reservations)
-                                      .FirstOrDefaultAsync(c => c.Id == id.Value);
+                                          .Include(c => c.Reservations)
+                                          .FirstOrDefaultAsync(c => c.Id == id.Value);
             }
             else
             {
@@ -38,8 +37,8 @@ namespace HotelReservation.Controllers
                 if (user != null)
                 {
                     Customer = await _context.Users
-                                     .Include(c => c.Reservations)
-                                          .FirstOrDefaultAsync(h => h.ApplicationUserId == user.Id);
+                                             .Include(c => c.Reservations)
+                                             .FirstOrDefaultAsync(h => h.ApplicationUserId == user.Id);
                 }
             }
 
@@ -48,22 +47,22 @@ namespace HotelReservation.Controllers
                 return NotFound();
             }
 
-            // Calculate total number of rooms
-            var totalRooms = Customer.Reservations.Count();
+            // Calculate total number of reservations
+            var totalReservations = Customer.Reservations.Count();
 
-            // Paginate and project to RoomViewModel
+            // Paginate and project to UserReservationViewModel
             var reservation = Customer.Reservations
-                             .Skip((pageNumber - 1) * pageSize)
-                             .Take(pageSize)
-                             .Select(r => new UserReservationViewModel
-                             {
-                                 Id = r.Id,
-                                 CheckInDate = r.CheckInDate,
-                                 CheckOutDate = r.CheckOutDate,
-                                 ReservationStatus = r.ReservationStatus,
-
-                             })
-                             .ToList();
+                                 .Skip((pageNumber - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .Select(r => new UserReservationViewModel
+                                 {
+                                     Id = r.Id,
+                                     CheckInDate = r.CheckInDate,
+                                     CheckOutDate = r.CheckOutDate,
+                                     TotalAmount = r.TotalAmount,
+                                     ReservationStatus = r.ReservationStatus,
+                                 })
+                                 .ToList();
 
             // Create view model to pass to view
             var viewModel = new CustomerProfileViewModel
@@ -73,20 +72,20 @@ namespace HotelReservation.Controllers
                     FirstName = Customer.FirstName,
                     LastName = Customer.LastName,
                     City = Customer.City,
-                    State = Customer.State
-
+                    State = Customer.State,
+                    ImageUrl = Customer.ProfilePicture != null
+                        ? $"data:image/png;base64,{Convert.ToBase64String(Customer.ProfilePicture)}"
+                        : null // Or a placeholder image URL
                 },
-
-                Reservations = new PagedResult<UserReservationViewModel>(reservation, totalRooms, pageNumber, pageSize)
+                Reservations = new PagedResult<UserReservationViewModel>(reservation, totalReservations, pageNumber, pageSize)
             };
             return View(viewModel);
         }
 
 
 
-
         [HttpPost]
-        public async Task<IActionResult> UploadHotelPicture(IFormFile file)
+        public async Task<IActionResult> UploadCustomerPicture(IFormFile file)
         {
             if (file == null || file.Length == 0)
             {
@@ -99,10 +98,8 @@ namespace HotelReservation.Controllers
                 return Unauthorized();
             }
 
-            var hotel = await _context.Hotels
-                                      .FirstOrDefaultAsync(h => h.ApplicationUserId == user.Id);
-
-            if (hotel == null)
+            var customer = await _context.Users.FindAsync(user.Id);
+            if (customer == null)
             {
                 return NotFound();
             }
@@ -110,14 +107,15 @@ namespace HotelReservation.Controllers
             using (var memoryStream = new MemoryStream())
             {
                 await file.CopyToAsync(memoryStream);
-                hotel.HotelPicture = memoryStream.ToArray();
+                customer.ProfilePicture = memoryStream.ToArray();
             }
 
-            _context.Hotels.Update(hotel);
+            _context.Users.Update(customer);
             await _context.SaveChangesAsync();
 
-            return Ok(new { imageUrl = $"data:image;base64,{Convert.ToBase64String(hotel.HotelPicture)}" });
+            return Ok(new { imageUrl = $"data:image;base64,{Convert.ToBase64String(customer.ProfilePicture)}" });
         }
+
 
 
 
@@ -306,5 +304,10 @@ namespace HotelReservation.Controllers
         {
             return View();
         }
+
+
+
+
+
     }
 }

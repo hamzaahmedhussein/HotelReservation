@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace HotelReservation.Models
+﻿namespace HotelReservation.Models
 {
     public class User
     {
@@ -14,5 +12,7 @@ namespace HotelReservation.Models
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public ICollection<Reservation> Reservations { get; set; }
+
+        public byte[] ProfilePicture { get; set; } // Added property for profile picture
     }
 }

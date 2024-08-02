@@ -3,19 +3,19 @@
 
 <div class="container justify-content-center text-center">
     <div class="row justify-content-center">
-        <div class="col-md-3">
-            <div class="card text-center rounded" id="cardUser" style="cursor: pointer;">
+        <div style="width:16%">
+            <div class="card text-center rounded" id="cardUser" style="cursor: pointer; display:flex; justify-content:end">
                 <img src="~/Images/avatar.png" class="card-img-top p-2" alt="User">
                 <div class="card-body">
-                    <h5 class="card-title">Register as User</h5>
+                    <h5 class="card-title" style="font-size: 15px;">Register as User</h5>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div style="width:16%">
             <div class="card text-center rounded" id="cardHotel" style="cursor: pointer;">
                 <img src="~/Images/hotel.png" class="card-img-top p-2" alt="Hotel">
                 <div class="card-body">
-                    <h5 class="card-title">Register as Hotel</h5>
+                    <h5 class="card-title" style="font-size: 15px;">Register as Hotel</h5>
                 </div>
             </div>
         </div>
@@ -47,12 +47,16 @@
         });
 
         function showRegistrationForm(userType) {
-            document.getElementById("cardUser").style.display = "none";
-            document.getElementById("cardHotel").style.display = "none";
+            // Remove active border from both cards
+            document.getElementById("cardUser").classList.remove("border", "border-primary");
+            document.getElementById("cardHotel").classList.remove("border", "border-primary");
 
             if (userType === "User") {
+                document.getElementById("cardUser").classList.add("border", "border-primary");
                 document.getElementById("registerUserForm").style.display = "block";
+                document.getElementById("registerHotelForm").style.display = "none";
             } else if (userType === "Hotel") {
+                document.getElementById("cardHotel").classList.add("border", "border-primary");
                 document.getElementById("registerUserForm").style.display = "none";
                 document.getElementById("registerHotelForm").style.display = "block";
             }
@@ -61,8 +65,8 @@
         function goBack() {
             document.getElementById("registerUserForm").style.display = "none";
             document.getElementById("registerHotelForm").style.display = "none";
-            document.getElementById("cardUser").style.display = "block";
-            document.getElementById("cardHotel").style.display = "block";
+            document.getElementById("cardUser").classList.remove("border", "border-primary");
+            document.getElementById("cardHotel").classList.remove("border", "border-primary");
         }
 
         window.onload = function () {

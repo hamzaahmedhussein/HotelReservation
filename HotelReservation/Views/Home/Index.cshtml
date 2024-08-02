@@ -52,67 +52,89 @@
                 </div>
             </div>
             <div class="col-md-3 d-flex justify-content-center align-items-center">
-                <button type="submit" class="btn btn-primary ">Filter</button>
+                <button type="submit" class="btn btn-primary">Filter</button>
             </div>
         </div>
         <input type="hidden" name="PageNumber" value="@Model.CurrentPage" />
         <input type="hidden" name="PageSize" value="@Model.PageSize" />
-       
     </div>
 </form>
 
-
-<<style>
-     .card {
-         height: 100%;
-         display: flex;
-         flex-direction: column;
-     }
-
-     .card-img-top {
-         height: 200px;
-         object-fit: cover;
-         width: 100%;
-     }
-
-     .card-body {
-         flex: 1;
-     }
-</style>
-
 <style>
-    .card {
-        height: 100%;
+    .room-card {
         display: flex;
         flex-direction: column;
+        height: 100%;
+        transition: box-shadow 0.3s ease;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
     }
 
-    .card-img-top {
-        height: 200px;
-        object-fit: cover;
-        width: 100%;
-    }
+        .room-card:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-color: #007bff; /* Border color on hover */
+        }
 
     .card-body {
-        flex: 1;
+        padding: 1rem;
+    }
+
+    .btn-action {
+        margin: 0.5rem;
+        color: #fff;
+        opacity: 0.9;
+        transition: opacity 0.2s;
+    }
+
+        .btn-action:hover {
+            opacity: 1;
+        }
+
+    .btn-details {
+        background-color: #007bff; /* Blue */
+    }
+
+    .btn-update {
+        background-color: #28a745; /* Green */
+    }
+
+    .btn-delete {
+        background-color: #dc3545; /* Red */
     }
 
     .btn-reserve {
-        margin-top: auto; /* Pushes the button to the bottom of the card */
+        background-color: #ffc107; /* Yellow */
+    }
+
+    .room-image {
+        height: 200px; /* Adjust image height */
+        object-fit: cover;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        width: 100%;
+    }
+
+    .room-details {
+        flex: 1;
+        padding: 1rem;
+    }
+
+    .room-actions {
+        padding: 1rem;
+        text-align: center;
     }
 </style>
-
 
 <div class="container">
     <div class="row">
         @foreach (var room in Model.Results)
         {
-            <div class="col-md-4">
-                <div class="card mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card room-card">
                     @if (room.RoomPicture != null && room.RoomPicture.Length > 0)
                     {
                         var base64Image = Convert.ToBase64String(room.RoomPicture);
-                        <img src="data:image/jpeg;base64,@base64Image" class="card-img-top" alt="Room Picture">
+                        <img src="data:image/jpeg;base64,@base64Image" class="card-img-top room-image" alt="Room Picture">
                     }
                     else
                     {
@@ -120,11 +142,13 @@
                             <span class="text-muted">No Image</span>
                         </div>
                     }
-                    <div class="card-body">
+                    <div class="room-details">
                         <h5 class="card-title">Room Number: @room.RoomNumber</h5>
-                        <p class="card-text">Beds Number: @room.BedsNumber</p>
-                        <p class="card-text">Price Per Night: @room.PricePerNight</p>
-                        <a href="@Url.Action("CreateReservation", "Customer", new { id = room.Id })" class="btn btn-primary btn-reserve">Add Reservation</a>
+                        <p class="card-text">Beds: @room.BedsNumber</p>
+                        <p class="card-text">Price per Night: @room.PricePerNight:C</p>
+                    </div>
+                    <div class="room-actions">
+                        <a href="@Url.Action("CreateReservation", "Customer", new { id = room.Id })" class="btn btn-action btn-reserve">Add Reservation</a>
                     </div>
                 </div>
             </div>
@@ -132,18 +156,24 @@
     </div>
 </div>
 
-
-
-
-
-<nav>
-    <ul class="pagination">
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center mt-4">
+        <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+            <a class="page-link" href="@Url.Action("Index", new { pageNumber = Model.CurrentPage - 1, pageSize = Model.PageSize })" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
         @for (int i = 1; i <= Model.TotalPages; i++)
         {
-            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                <a class="page-link" href="@Url.Action("Index", new { Filter = Model.Filter, PageNumber = i, PageSize = Model.PageSize })">@i</a>
+            <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                <a class="page-link" href="@Url.Action("Index", new { pageNumber = i, pageSize = Model.PageSize })">@i</a>
             </li>
         }
+        <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+            <a class="page-link" href="@Url.Action("Index", new { pageNumber = Model.CurrentPage + 1, pageSize = Model.PageSize })" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
     </ul>
 </nav>
 

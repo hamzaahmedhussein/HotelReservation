@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using HotelReservation.Models;
+﻿using HotelReservation.Models;
 using HotelReservation.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HotelReservation.Controllers
 {
@@ -43,7 +42,7 @@ namespace HotelReservation.Controllers
                         ApplicationUserId = user.Id,
                         FirstName = model.FirstName,
                         LastName = model.LastName,
-                        City= model.City,
+                        City = model.City,
                         State = model.State,
                     };
 
@@ -84,7 +83,6 @@ namespace HotelReservation.Controllers
                         Address = model.Address,
                         City = model.City,
                         State = model.State,
-                        Rating = model.Rating
                     };
 
                     _context.Hotels.Add(hotel);
@@ -130,8 +128,12 @@ namespace HotelReservation.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
+            // Sign out the user
             await _signInManager.SignOutAsync();
+
+
             return RedirectToAction("Index", "Home");
         }
+
     }
 }

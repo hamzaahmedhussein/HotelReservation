@@ -4,18 +4,20 @@
     .profile-card {
         display: flex;
         align-items: center;
-        width: 100%;
-        height: 150px;
+        flex-direction:column;
+   justify-content:center;
+        width:60%;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         border-radius: 15px;
-        overflow: hidden;
-        margin: 0 auto;
+        padding:10px
+      
+      
     }
 
     .profile-image-container {
-        flex: 0 0 150px;
+      
         height: 150px;
-        position: relative;
+     
     }
 
     .profile-image {
@@ -26,12 +28,10 @@
     }
 
     .upload-icon {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
+  
         background-color: rgba(255, 255, 255, 0.8);
         border-radius: 50%;
-        padding: 5px;
+     
         cursor: pointer;
     }
 
@@ -40,8 +40,7 @@
         }
 
     .profile-info {
-        flex: 1;
-        padding: 15px;
+      
     }
 
         .profile-info h3 {
@@ -55,7 +54,7 @@
 </style>
 
 <div class="profile-card">
-    <div class="profile-image-container d-flex align-items-center justify-content-center">
+    <div class="profile-image-container d-flex align-items-end justify-content-center">
         <img src="data:image;base64,@(Model.HotelPicture != null ? Convert.ToBase64String(Model.HotelPicture) : "")" class="profile-image" alt="Hotel Profile Picture" id="profilePicture">
         <label for="fileUpload" class="upload-icon">
             <i class="fas fa-camera"></i>
