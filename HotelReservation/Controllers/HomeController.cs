@@ -3,9 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelReservation.Controllers
 {
-    public class HomeController(ApplicationDbContext context) : Controller
+    public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _context = context;
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         [HttpGet]
         public IActionResult Index(FilteredPaginatedRooms model)
@@ -15,22 +20,20 @@ namespace HotelReservation.Controllers
                 model = new FilteredPaginatedRooms();
             }
 
-            model.PageNumber = model.PageNumber == 0 ? 1 : model.PageNumber;
-            model.PageSize = model.PageSize == 0 ? 6 : model.PageSize;
 
             var query = _context.Rooms.AsQueryable();
 
-            if (!string.IsNullOrEmpty(model.Address))
+            if (!string.IsNullOrEmpty(model.Address?.Trim()))
             {
-                query = query.Where(r => r.Hotel.Address.Contains(model.Address));
+                query = query.Where(r => r.Hotel.Address.Contains(model.Address.Trim()));
             }
-            if (!string.IsNullOrEmpty(model.City))
+            if (!string.IsNullOrEmpty(model.City?.Trim()))
             {
-                query = query.Where(r => r.Hotel.City.Contains(model.City));
+                query = query.Where(r => r.Hotel.City.Contains(model.City.Trim()));
             }
-            if (!string.IsNullOrEmpty(model.State))
+            if (!string.IsNullOrEmpty(model.State?.Trim()))
             {
-                query = query.Where(r => r.Hotel.State.Contains(model.State));
+                query = query.Where(r => r.Hotel.State.Contains(model.State.Trim()));
             }
             if (model.BedsNumber > 0)
             {
@@ -40,7 +43,7 @@ namespace HotelReservation.Controllers
             {
                 query = query.Where(r => r.PricePerNight <= model.PricePerNight);
             }
-            if (model.CheckInDate != default(DateTime) && model.CheckOutDate != default(DateTime))
+            if (model.CheckInDate != default && model.CheckOutDate != default)
             {
                 query = query.Where(r => !r.Reservations.Any(res =>
                     res.ReservationStatus == ReservationStatus.Confirmed &&
@@ -56,6 +59,7 @@ namespace HotelReservation.Controllers
                 .Select(r => new RoomViewModel
                 {
                     Id = r.Id,
+                    HotelId = r.HotelId,
                     RoomNumber = r.RoomNumber,
                     BedsNumber = r.BedsNumber,
                     PricePerNight = r.PricePerNight,
@@ -66,12 +70,5 @@ namespace HotelReservation.Controllers
             var roomsResult = new HomePagePagedResult<RoomViewModel>(rooms, totalRoomsCount, model.PageNumber, model.PageSize, model);
             return View(roomsResult);
         }
-
-
-
-
-
-
-
     }
 }

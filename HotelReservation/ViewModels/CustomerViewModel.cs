@@ -6,6 +6,6 @@
         public string LastName { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public string ImageUrl { get; set; } // Add this property
+        public byte[]? ProfilePicture { get; set; }
     }
 }

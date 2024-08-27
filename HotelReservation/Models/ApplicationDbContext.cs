@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
-    public DbSet<User> Users { get; set; }
+    public DbSet<Customer> Customers { get; set; }
     public DbSet<Hotel> Hotels { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
@@ -21,9 +21,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         base.OnModelCreating(modelBuilder);
 
 
-        modelBuilder.Entity<User>()
+        modelBuilder.Entity<Customer>()
             .HasMany(u => u.Reservations)
-            .WithOne(r => r.User)
+            .WithOne(r => r.Customer)
             .HasForeignKey(r => r.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
@@ -45,8 +45,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     private void SeedRoles(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<IdentityRole>().HasData(
-            new IdentityRole { Id = Guid.NewGuid().ToString(), Name = "User", NormalizedName = "USER" },
-            new IdentityRole { Id = Guid.NewGuid().ToString(), Name = "Hotel", NormalizedName = "HOTEL" }
+            new IdentityRole { Id = Guid.NewGuid().ToString(), Name = "Customer", NormalizedName = "Customer" },
+            new IdentityRole { Id = Guid.NewGuid().ToString(), Name = "Hotel", NormalizedName = "Hotel" }
         );
     }
 }

@@ -24,9 +24,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated)
+                        { 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                @if (User.IsInRole("Hotel"))
+                                {
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Hotel" asp-action="HotelProfile">Profile</a>
+                                }
+                                else if (User.IsInRole("Customer"))
+                                {
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Customer" asp-action="CustomerProfile">Profile</a>
+                                }
                         </li>
+                        }
+                       
                     </ul>
                     @if (User.Identity.IsAuthenticated)
                     {

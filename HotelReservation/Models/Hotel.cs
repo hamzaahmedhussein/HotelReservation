@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace HotelReservation.Models
+﻿namespace HotelReservation.Models
 {
     public class Hotel
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public byte[] HotelPicture { get; set; }
+        public byte[]? HotelPicture { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
         public string State { get; set; }

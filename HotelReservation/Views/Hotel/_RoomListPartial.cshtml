@@ -20,7 +20,7 @@
 
         .room-card:hover {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-color: #007bff; /* Border color on hover */
+            border-color: #007bff;
         }
 
     .card-body {
@@ -32,6 +32,7 @@
         color: #fff;
         opacity: 0.9;
         transition: opacity 0.2s;
+        width: 100%; /* Ensures full width on small screens */
     }
 
         .btn-action:hover {
@@ -105,23 +106,22 @@
                         <p class="card-text">Price per Night: @room.PricePerNight:C</p>
                     </div>
 
-                    @if (User.Identity.IsAuthenticated)
-                    {
+                    @{
                         var isOwner = hotel != null && room.HotelId == hotel.Id;
-
-                        <div class="room-actions">
-                            @if (isOwner)
-                            {
-                                <a href="@Url.Action("RoomDetails", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-details">Details</a>
-                                <a href="@Url.Action("UpdateRoom", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-update">Update</a>
-                                <a href="@Url.Action("DeleteRoom", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-delete">Delete</a>
-                            }
-                            else
-                            {
-                                <a href="@Url.Action("CreateReservation", "Customer", new { id = room.Id })" class="btn btn-action btn-reserve">Add Reservation</a>
-                            }
-                        </div>
                     }
+
+                    <div class="room-actions">
+                        @if (isOwner)
+                        {
+                            <a href="@Url.Action("RoomDetails", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-details">Details</a>
+                            <a href="@Url.Action("UpdateRoom", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-update">Update</a>
+                            <a href="@Url.Action("DeleteRoom", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-delete">Delete</a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("CreateReservation", "Customer", new { id = room.Id })" class="btn btn-action btn-reserve">Add Reservation</a>
+                        }
+                    </div>
                 </div>
             </div>
         }

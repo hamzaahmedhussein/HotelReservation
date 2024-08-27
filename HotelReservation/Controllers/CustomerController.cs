@@ -22,12 +22,12 @@ namespace HotelReservation.Controllers
         [HttpGet("Profile/{id?}")]
         public async Task<IActionResult> CustomerProfile(int? id, int pageNumber = 1, int pageSize = 6)
         {
-            User Customer = null;
+            Customer Customer = null;
 
             // Fetch customer profile information based on id or current user
             if (id.HasValue)
             {
-                Customer = await _context.Users
+                Customer = await _context.Customers
                                           .Include(c => c.Reservations)
                                           .FirstOrDefaultAsync(c => c.Id == id.Value);
             }
@@ -36,7 +36,7 @@ namespace HotelReservation.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 if (user != null)
                 {
-                    Customer = await _context.Users
+                    Customer = await _context.Customers
                                              .Include(c => c.Reservations)
                                              .FirstOrDefaultAsync(h => h.ApplicationUserId == user.Id);
                 }
@@ -73,9 +73,7 @@ namespace HotelReservation.Controllers
                     LastName = Customer.LastName,
                     City = Customer.City,
                     State = Customer.State,
-                    ImageUrl = Customer.ProfilePicture != null
-                        ? $"data:image/png;base64,{Convert.ToBase64String(Customer.ProfilePicture)}"
-                        : null // Or a placeholder image URL
+                    ProfilePicture = Customer.ProfilePicture,
                 },
                 Reservations = new PagedResult<UserReservationViewModel>(reservation, totalReservations, pageNumber, pageSize)
             };
@@ -98,7 +96,7 @@ namespace HotelReservation.Controllers
                 return Unauthorized();
             }
 
-            var customer = await _context.Users.FindAsync(user.Id);
+            var customer = await _context.Customers.FindAsync(user.Id);
             if (customer == null)
             {
                 return NotFound();
@@ -110,7 +108,7 @@ namespace HotelReservation.Controllers
                 customer.ProfilePicture = memoryStream.ToArray();
             }
 
-            _context.Users.Update(customer);
+            _context.Customers.Update(customer);
             await _context.SaveChangesAsync();
 
             return Ok(new { imageUrl = $"data:image;base64,{Convert.ToBase64String(customer.ProfilePicture)}" });
@@ -122,7 +120,7 @@ namespace HotelReservation.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateCustomerInfo(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Customers.FindAsync(id);
 
             if (user == null)
             {
@@ -150,7 +148,7 @@ namespace HotelReservation.Controllers
                 return View(model);
             }
 
-            var user = await _context.Users.FindAsync(model.Id);
+            var user = await _context.Customers.FindAsync(model.Id);
 
             if (user == null)
             {
@@ -161,7 +159,7 @@ namespace HotelReservation.Controllers
             user.City = model.City;
             user.State = model.State;
 
-            _context.Users.Update(user);
+            _context.Customers.Update(user);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
@@ -202,7 +200,7 @@ namespace HotelReservation.Controllers
                 return Unauthorized();
             }
 
-            var customer = await _context.Users.FirstOrDefaultAsync(c => c.ApplicationUserId == user.Id);
+            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.ApplicationUserId == user.Id);
             if (customer == null)
             {
                 return BadRequest("Customer not found");
@@ -229,7 +227,7 @@ namespace HotelReservation.Controllers
                 CheckInDate = model.CheckInDate,
                 CheckOutDate = model.CheckOutDate,
                 TotalAmount = totalAmount,
-                User = customer,
+                Customer = customer,
                 Room = room,
                 ReservationStatus = ReservationStatus.Pending,
             };

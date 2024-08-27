@@ -18,7 +18,7 @@ namespace HotelReservation.Controllers
         }
 
         [HttpGet("hotelProfile/{id?}")]
-        public async Task<IActionResult> HotelProfile(int? id, int pageNumber = 1, int pageSize = 6)
+        public async Task<IActionResult> HotelProfile(int? id, int pageNumber = 1, int pageSize = 3)
         {
             Hotel hotel = null;
 

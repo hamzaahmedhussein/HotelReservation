@@ -10,7 +10,7 @@
         public DateTime CheckInDate { get; set; } = DateTime.Today;
         public DateTime CheckOutDate { get; set; } = DateTime.Today.AddDays(1);
         public int PageNumber { get; set; } = 1;
-        public int PageSize { get; set; } = 6;
+        public int PageSize { get; set; } = 3;
     }
 
 }

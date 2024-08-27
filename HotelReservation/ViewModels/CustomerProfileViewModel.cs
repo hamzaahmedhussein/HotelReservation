@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace HotelReservation.ViewModels
+﻿namespace HotelReservation.ViewModels
 {
     public class CustomerProfileViewModel
     {

@@ -1,6 +1,6 @@
 ﻿namespace HotelReservation.Models
 {
-    public class User
+    public class Customer
     {
         public int Id { get; set; }
 
@@ -13,6 +13,6 @@
         public ApplicationUser ApplicationUser { get; set; }
         public ICollection<Reservation> Reservations { get; set; }
 
-        public byte[] ProfilePicture { get; set; } // Added property for profile picture
+        public byte[]? ProfilePicture { get; set; } // Added property for profile picture
     }
 }

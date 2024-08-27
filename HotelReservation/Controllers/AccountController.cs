@@ -30,26 +30,26 @@ namespace HotelReservation.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var applicationUser = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var result = await _userManager.CreateAsync(applicationUser, model.Password);
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, "User");
+                    await _userManager.AddToRoleAsync(applicationUser, "Customer");
 
-                    var applicationUser = new User
+                    var customer = new Customer
                     {
-                        ApplicationUserId = user.Id,
+                        ApplicationUserId = applicationUser.Id,
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         City = model.City,
                         State = model.State,
                     };
 
-                    _context.Users.Add(applicationUser);
+                    _context.Customers.Add(customer);
                     await _context.SaveChangesAsync();
 
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    await _signInManager.SignInAsync(applicationUser, isPersistent: false);
 
                     return RedirectToAction("Index", "Home");
                 }

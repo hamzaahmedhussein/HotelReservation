@@ -11,7 +11,7 @@ public class Reservation
     public ReservationStatus ReservationStatus { get; set; } // Confirmed, Cancelled, Completed
 
     // Navigation properties
-    public User User { get; set; }
+    public Customer Customer { get; set; }
     public Room Room { get; set; }
 }
 

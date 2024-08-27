@@ -4,16 +4,20 @@
     .profile-card {
         display: flex;
         align-items: center;
-        flex-direction: column;
-        justify-content: center;
-        width: 60%;
+        flex-direction:column;
+   justify-content:center;
+        width:60%;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         border-radius: 15px;
-        padding: 10px;
+        padding:10px
+      
+      
     }
 
     .profile-image-container {
+      
         height: 150px;
+     
     }
 
     .profile-image {
@@ -24,12 +28,11 @@
     }
 
     .upload-icon {
+  
         background-color: rgba(255, 255, 255, 0.8);
         border-radius: 50%;
+     
         cursor: pointer;
-        position: relative;
-        top: -40px;
-        left: 100px;
     }
 
         .upload-icon input[type="file"] {
@@ -37,7 +40,7 @@
         }
 
     .profile-info {
-        text-align: center;
+      
     }
 
         .profile-info h3 {
@@ -49,22 +52,50 @@
             margin-bottom: 5px;
         }
 </style>
-<div style=" width:100%;display:flex;justify-content:center;align-items:center">
 
-<div class="profile-card">
-    <div class="profile-image-container d-flex align-items-end justify-content-center">
-        <img src="@Model.Customer.ImageUrl" class="profile-image" alt="Customer Profile Picture" id="profilePicture">
-        <label for="fileUpload" class="upload-icon">
-            <i class="fas fa-camera"></i>
-            <input type="file" id="fileUpload" accept="image/*" onchange="uploadPicture(this)">
-        </label>
+<div style=" width:100%;display:flex;justify-content:center;align-items:center">
+    <div class="profile-card">
+        <div class="profile-image-container d-flex align-items-end justify-content-center">
+            <img src="data:image;base64,@(Model.Customer.ProfilePicture != null ? Convert.ToBase64String(Model.Customer.ProfilePicture) : "")" class="profile-image" alt="Hotel Profile Picture" id="profilePicture">
+            <label for="fileUpload" class="upload-icon">
+                <i class="fas fa-camera"></i>
+                <input type="file" id="fileUpload" accept="image/*" onchange="uploadPicture(this)">
+            </label>
+        </div>
+        <div class="profile-info">
+            <h3>@Model.Customer.FirstName @Model.Customer.FirstName</h3>
+            <p><i class="fas fa-map-marker-alt"></i> @Model.Customer.City, @Model.Customer.State</p>
+        </div>
     </div>
-    <div class="profile-info">
-        <h3>@Model.Customer.FirstName @Model.Customer.LastName</h3>
-        <p><i class="fas fa-map-marker-alt"></i> @Model.Customer.City, @Model.Customer.State</p>
-    </div>
+
 </div>
-</div>
+
+<script>
+    function uploadPicture(input) {
+        if (input.files && input.files[0]) {
+            var formData = new FormData();
+            formData.append("file", input.files[0]);
+
+            fetch('/hotel/UploadHotelPicture', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.imageUrl) {
+                        document.getElementById('profilePicture').src = data.imageUrl;
+                    } else {
+                        alert("An error occurred while uploading the picture.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("An error occurred while uploading the picture.");
+                });
+        }
+    }
+</script>
+
 
 <h3>Reservations</h3>
 
