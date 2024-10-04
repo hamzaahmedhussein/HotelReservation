@@ -6,7 +6,9 @@
 @{
     var currentUserId = UserManager.GetUserId(User);
     var hotel = _context.Hotels.FirstOrDefault(h => h.ApplicationUserId == currentUserId);
+    bool isOwner = hotel != null;
 }
+
 
 <style>
     .room-card {
@@ -84,10 +86,12 @@
         </div>
     }
 
-    <div class="row">
+    <div class="row mt-4">
         @foreach (var room in Model.Results)
         {
-            <div class="col-md-4 mb-3">
+            var isRoomOwner = isOwner && room.HotelId == hotel.Id;
+
+            <div class="col-md-3 col-sm-6  mb-4">
                 <div class="card room-card">
                     @if (room.RoomPicture != null && room.RoomPicture.Length > 0)
                     {
@@ -103,25 +107,21 @@
                     <div class="room-details">
                         <h5 class="card-title">Room Number: @room.RoomNumber</h5>
                         <p class="card-text">Beds: @room.BedsNumber</p>
-                        <p class="card-text">Price per Night: @room.PricePerNight:C</p>
+                        <p class="card-text">Price per Night: @room.PricePerNight:$</p>
                     </div>
-
-                    @{
-                        var isOwner = hotel != null && room.HotelId == hotel.Id;
-                    }
-
-                    <div class="room-actions">
-                        @if (isOwner)
+                    <div class="room-actions d-flex justify-content-start gap-2">
+                        @if (isRoomOwner)
                         {
-                            <a href="@Url.Action("RoomDetails", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-details">Details</a>
-                            <a href="@Url.Action("UpdateRoom", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-update">Update</a>
-                            <a href="@Url.Action("DeleteRoom", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-delete">Delete</a>
+                            <a href="@Url.Action("RoomDetails", "Hotel", new { Id = room.Id })" class="btn btn-action btn-primary">Details</a>
+                            <a href="@Url.Action("UpdateRoom", "Hotel", new { Id = room.Id })" class="btn btn-action btn-primary">Update</a>
+                            <a href="@Url.Action("DeleteRoom", "Hotel", new { Id = room.Id })" class="btn btn-action btn-delete">Delete</a>
                         }
                         else
                         {
                             <a href="@Url.Action("CreateReservation", "Customer", new { id = room.Id })" class="btn btn-action btn-reserve">Add Reservation</a>
                         }
                     </div>
+
                 </div>
             </div>
         }

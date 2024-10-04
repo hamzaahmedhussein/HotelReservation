@@ -24,7 +24,6 @@ namespace HotelReservation.Controllers
         {
             Customer Customer = null;
 
-            // Fetch customer profile information based on id or current user
             if (id.HasValue)
             {
                 Customer = await _context.Customers
@@ -47,10 +46,8 @@ namespace HotelReservation.Controllers
                 return NotFound();
             }
 
-            // Calculate total number of reservations
             var totalReservations = Customer.Reservations.Count();
 
-            // Paginate and project to UserReservationViewModel
             var reservation = Customer.Reservations
                                  .Skip((pageNumber - 1) * pageSize)
                                  .Take(pageSize)
@@ -64,7 +61,6 @@ namespace HotelReservation.Controllers
                                  })
                                  .ToList();
 
-            // Create view model to pass to view
             var viewModel = new CustomerProfileViewModel
             {
                 Customer = new CustomerViewModel
@@ -82,37 +78,6 @@ namespace HotelReservation.Controllers
 
 
 
-        [HttpPost]
-        public async Task<IActionResult> UploadCustomerPicture(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-            {
-                return BadRequest("No file uploaded.");
-            }
-
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            var customer = await _context.Customers.FindAsync(user.Id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                customer.ProfilePicture = memoryStream.ToArray();
-            }
-
-            _context.Customers.Update(customer);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { imageUrl = $"data:image;base64,{Convert.ToBase64String(customer.ProfilePicture)}" });
-        }
 
 
 

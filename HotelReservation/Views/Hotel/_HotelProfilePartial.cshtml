@@ -69,27 +69,47 @@
 </div>
 
 <script>
-    function uploadPicture(input) {
-        if (input.files && input.files[0]) {
-            var formData = new FormData();
-            formData.append("file", input.files[0]);
+   function uploadPicture(input) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
 
-            fetch('/hotel/UploadHotelPicture', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.imageUrl) {
-                        document.getElementById('profilePicture').src = data.imageUrl;
-                    } else {
-                        alert("An error occurred while uploading the picture.");
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert("An error occurred while uploading the picture.");
-                });
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!validImageTypes.includes(file.type)) {
+            alert("Please upload a valid image (JPEG, PNG, GIF).");
+            return;
         }
+
+        const maxSize = 2 * 1024 * 1024; 
+        if (file.size > maxSize) {
+            alert("The file size should not exceed 2MB.");
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append("file", file);
+
+        fetch('/hotel/UploadHotelPicture', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to upload the picture.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.imageUrl) {
+                    document.getElementById('profilePicture').src = data.imageUrl;
+                } else {
+                    alert("An error occurred while uploading the picture.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred while uploading the picture.");
+            });
     }
+}
+
 </script>

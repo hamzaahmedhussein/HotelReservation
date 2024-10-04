@@ -83,7 +83,6 @@ namespace HotelReservation.Controllers
 
 
 
-
         [HttpPost]
         public async Task<IActionResult> UploadHotelPicture(IFormFile file)
         {
@@ -92,32 +91,54 @@ namespace HotelReservation.Controllers
                 return BadRequest("No file uploaded.");
             }
 
+            // Ensure file is an image
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (!allowedExtensions.Contains(extension))
+            {
+                return BadRequest("Invalid file type. Please upload an image.");
+            }
+
+            // Limit file size to 2MB
+            const long maxFileSize = 2 * 1024 * 1024;
+            if (file.Length > maxFileSize)
+            {
+                return BadRequest("File size exceeds 2MB.");
+            }
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return Unauthorized();
             }
 
-            var hotel = await _context.Hotels
-                                      .FirstOrDefaultAsync(h => h.ApplicationUserId == user.Id);
+            var hotel = await _context.Hotels.FirstOrDefaultAsync(h => h.ApplicationUserId == user.Id);
 
             if (hotel == null)
             {
                 return NotFound();
             }
 
-            using (var memoryStream = new MemoryStream())
+            try
             {
-                await file.CopyToAsync(memoryStream);
-                hotel.HotelPicture = memoryStream.ToArray();
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    hotel.HotelPicture = memoryStream.ToArray();
+                }
+
+                _context.Hotels.Update(hotel);
+                await _context.SaveChangesAsync();
+
+                var imageUrl = $"data:image;base64,{Convert.ToBase64String(hotel.HotelPicture)}";
+                return Ok(new { imageUrl });
             }
-
-            _context.Hotels.Update(hotel);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { imageUrl = $"data:image;base64,{Convert.ToBase64String(hotel.HotelPicture)}" });
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
-
 
 
 
@@ -220,7 +241,7 @@ namespace HotelReservation.Controllers
             _context.Rooms.Update(room);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
 
@@ -251,7 +272,7 @@ namespace HotelReservation.Controllers
             _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
 

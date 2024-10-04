@@ -1,0 +1,22 @@
+﻿@model HotelReservation.ViewModels.VerifyOtpViewModel
+
+<div class="d-flex align-items-center justify-content-center p-5">
+    <div class="card col-md-4 py-5 px-3 border-3 rounded-3">
+        <h3 class="card-title text-center">Confirm Email</h3>
+
+        <div class="row card-body">
+            <form asp-action="VerifyOTPToConfirmEmail" method="post">
+    <input type="hidden" asp-for="Email" />
+    <div class="form-group">
+        <label for="otp">Enter OTP</label>
+        <input type="text" asp-for="OTP" class="form-control" placeholder="Enter OTP" required />
+        <span asp-validation-for="OTP" class="text-danger"></span>
+    </div>
+    <div class="form-group mt-3">
+        <input type="submit" value="Confirm Email" class="btn btn-primary" />
+    </div>
+</form>
+        </div>
+    </div>
+</div>
+

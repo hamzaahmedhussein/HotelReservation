@@ -54,6 +54,12 @@ namespace HotelReservation.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("OTP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("OTPExpiry")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -165,6 +171,34 @@ namespace HotelReservation.Migrations
                     b.ToTable("Hotels");
                 });
 
+            modelBuilder.Entity("HotelReservation.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("HotelReservation.Models.Payment", b =>
                 {
                     b.Property<int>("Id")
@@ -256,13 +290,13 @@ namespace HotelReservation.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "51521b98-5508-4cfe-a470-6c1d6fee6e3d",
+                            Id = "319ffbf9-e6b8-4787-81df-61e52b135573",
                             Name = "Customer",
                             NormalizedName = "Customer"
                         },
                         new
                         {
-                            Id = "6ae0a55d-d604-4e17-a3b2-b40f0cc1775d",
+                            Id = "b90e4169-4f56-4a46-a5cf-2b4029a14a99",
                             Name = "Hotel",
                             NormalizedName = "Hotel"
                         });

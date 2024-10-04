@@ -6,26 +6,29 @@
 
 <h2>Confirm Reservation</h2>
 
-<form asp-action="ConfirmReservation" method="post">
-    <input type="hidden" asp-for="ReservationId" />
+<div class="row col-md-4">
+    <form asp-action="ConfirmReservation" method="post">
+        <input type="hidden" asp-for="ReservationId" />
 
-    <div class="form-group">
-        <label asp-for="TotalAmount" class="control-label"></label>
-        <input asp-for="TotalAmount" class="form-control" readonly />
-    </div>
-    <div class="form-group">
-        <label asp-for="CreditCardNumber" class="control-label"></label>
-        <input asp-for="CreditCardNumber" class="form-control" />
-        <span asp-validation-for="CreditCardNumber" class="text-danger"></span>
-    </div>
-  
-    <div class="form-group">
-        <label asp-for="CVV" class="control-label"></label>
-        <input asp-for="CVV" class="form-control" />
-        <span asp-validation-for="CVV" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Confirm Reservation</button>
-</form>
+        <div class="form-group">
+            <label asp-for="TotalAmount" class="control-label"></label>
+            <input asp-for="TotalAmount" class="form-control" readonly />
+        </div>
+        <div class="form-group">
+            <label asp-for="CreditCardNumber" class="control-label"></label>
+            <input asp-for="CreditCardNumber" class="form-control" />
+            <span asp-validation-for="CreditCardNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CVV" class="control-label"></label>
+            <input asp-for="CVV" class="form-control" />
+            <span asp-validation-for="CVV" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Confirm Reservation</button>
+    </form>
+
+</div>
 
 @section Scripts {
     @{

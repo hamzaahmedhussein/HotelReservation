@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Chat";
+    string userId = User.Identity.Name ?? Guid.NewGuid().ToString();  // Replace with your user identification logic
+}
+
+<h2>Chat with @ViewBag.ReceiverId</h2>
+
+<div id="chatBox">
+    <div id="messageHistory"></div>
+    <input type="text" id="messageInput" placeholder="Enter your message..." />
+    <button id="sendButton">Send</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.0/signalr.min.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub?userId=@userId")
+            .build();
+
+        connection.start().then(function () {
+            console.log("SignalR connected!");
+
+            // Send the message when the button is clicked
+            $('#sendButton').click(function () {
+                const message = $('#messageInput').val();
+                const receiverId = '@ViewBag.ReceiverId';
+
+                if (message.trim() !== "") {
+                    // Send the message via SignalR
+                    connection.invoke("SendMessage", '@userId', receiverId, message)
+                        .catch(function (err) {
+                            console.error(err.toString());
+                        });
+
+                    // Save the message to the server
+                    $.ajax({
+                        url: '/Chat/SaveMessage',
+                        type: 'POST',
+                        data: {
+                            senderId: '@userId',
+                            receiverId: receiverId,
+                            content: message
+                        },
+                        headers: {
+                            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // for anti-CSRF
+                        },
+                        success: function (response) {
+                            if (!response.success) {
+                                alert(response.message);
+                            }
+                        }
+                    });
+
+                    $('#messageInput').val('');  // Clear the input field
+                }
+            });
+        });
+
+        // Receive messages from the server via SignalR
+        connection.on("ReceiveMessage", function (senderId, message) {
+            const messageElement = '<div><b>' + senderId + ':</b> ' + message + '</div>';
+            $('#messageHistory').append(messageElement);
+        });
+
+        // Load chat history when the page loads
+        $.get('/Chat/GetMessageHistory', { senderId: '@userId', receiverId: '@ViewBag.ReceiverId' }, function (response) {
+            if (response.success) {
+                response.messages.forEach(function (message) {
+                    const messageElement = '<div><b>' + message.senderId + ':</b> ' + message.content + '</div>';
+                    $('#messageHistory').append(messageElement);
+                });
+            }
+        });
+    });
+</script>

@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div style="width:16%">
             <div class="card text-center rounded" id="cardUser" style="cursor: pointer; display:flex; justify-content:end">
-                <img src="~/Images/avatar.png" class="card-img-top p-2" alt="User">
+                <img src="~/Images/avatar.jpg" class="card-img-top p-2" alt="User">
                 <div class="card-body">
                     <h5 class="card-title" style="font-size: 15px;">Register as User</h5>
                 </div>
@@ -21,20 +21,23 @@
         </div>
     </div>
 </div>
+<div class=" d-flex align-items-center justify-content-center p-5">
+    <div class="card col-md-4 py-5 px-3 border-3 rounded-3">
 
+        <div class="row card-body">
 <form id="registerUserForm" asp-action="RegisterUser" style="display: none;">
     @Html.Partial("_UserRegistrationForm", new UserRegistrationViewModel())
-    <div class="text-center mt-3">
-        <button type="button" class="btn btn-secondary btn-block" style="width: 150px;" onclick="goBack()">Back</button>
-    </div>
+  
 </form>
 
 <form id="registerHotelForm" asp-action="RegisterHotel" style="display: none;">
     @Html.Partial("_HotelRegistrationForm", new HotelRegistrationViewModel())
-    <div class="text-center mt-3">
-        <button type="button" class="btn btn-secondary btn-block" style="width: 150px;" onclick="goBack()">Back</button>
-    </div>
+   
 </form>
+
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
@@ -72,6 +75,7 @@
         window.onload = function () {
             document.getElementById("registerUserForm").style.display = "none";
             document.getElementById("registerHotelForm").style.display = "none";
+            showRegistrationForm("User");
         };
     </script>
 }

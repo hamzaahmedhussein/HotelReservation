@@ -11,67 +11,68 @@
 }
 
 <h2>Rooms</h2>
+<div class="container bg-image" style="background-image: url('https://hips.hearstapps.com/bpc.h-cdn.co/assets/18/03/1600x800/landscape-1516295489-vale-garden-residence.jpg?resize=1200:*'); background-size: cover; background-position: center; padding: 50px; border-radius: 10px; height:450px">
 
-<form method="get" asp-controller="Home" asp-action="Index">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="Address">Address</label>
-                    <input type="text" class="form-control" id="Address" name="Address" value="@Model.Filter?.Address" />
+    <form method="get" asp-controller="Home" asp-action="Index">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="Address" class="font-weight-bold">Address</label>
+                        <input type="text" class="form-control" id="Address" name="Address" value="@Model.Filter?.Address" />
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="City">City</label>
-                    <input type="text" class="form-control" id="City" name="City" value="@Model.Filter?.City" />
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="City" class="font-weight-bold">City</label>
+                        <input type="text" class="form-control" id="City" name="City" value="@Model.Filter?.City" />
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="State">State</label>
-                    <input type="text" class="form-control" id="State" name="State" value="@Model.Filter?.State" />
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="State" class="font-weight-bold">State</label>
+                        <input type="text" class="form-control" id="State" name="State" value="@Model.Filter?.State" />
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="BedsNumber">Beds Number</label>
-                    <input type="number" class="form-control" id="BedsNumber" name="BedsNumber" value="@Model.Filter?.BedsNumber" />
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="BedsNumber" class="font-weight-bold">Beds Number</label>
+                        <input type="number" class="form-control" id="BedsNumber" name="BedsNumber" value="@Model.Filter?.BedsNumber" />
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="PricePerNight">Price Per Night</label>
-                    <input type="number" class="form-control" id="PricePerNight" name="PricePerNight" value="@Model.Filter?.PricePerNight" step="0.01" />
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="PricePerNight" class="font-weight-bold">Price Per Night</label>
+                        <input type="number" class="form-control" id="PricePerNight" name="PricePerNight" value="@Model.Filter?.PricePerNight" step="0.01" />
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="CheckInDate">Check In Date</label>
-                    <input type="date" class="form-control" id="CheckInDate" name="CheckInDate" value="@Model.Filter?.CheckInDate.ToString("yyyy-MM-dd")" />
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="CheckInDate" class="font-weight-bold">Check In Date</label>
+                        <input type="date" class="form-control" id="CheckInDate" name="CheckInDate" value="@Model.Filter?.CheckInDate.ToString("yyyy-MM-dd")" />
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="CheckOutDate">Check Out Date</label>
-                    <input type="date" class="form-control" id="CheckOutDate" name="CheckOutDate" value="@Model.Filter?.CheckOutDate.ToString("yyyy-MM-dd")" />
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="CheckOutDate" class="font-weight-bold">Check Out Date</label>
+                        <input type="date" class="form-control" id="CheckOutDate" name="CheckOutDate" value="@Model.Filter?.CheckOutDate.ToString("yyyy-MM-dd")" />
+                    </div>
                 </div>
+            <div class="container col-md-3 d-flex justify-content-center align-items-center ">
+                <button type="submit" class="btn btn-primary mt-4 w-100">Filter</button>
             </div>
-            <div class="col-md-3 d-flex justify-content-center align-items-center">
-                <button type="submit" class="btn btn-primary">Filter</button>
+
             </div>
-        </div>
-        <input type="hidden" name="PageNumber" value="@Model.CurrentPage" />
-        <input type="hidden" name="PageSize" value="@Model.PageSize" />
-    </div>
-</form>
+            <input type="hidden" name="PageNumber" value="@Model.CurrentPage" />
+            <input type="hidden" name="PageSize" value="@Model.PageSize" />
+    </form>
+</div>
 
 <div class="row mt-4">
     @foreach (var room in Model.Results)
     {
         var isRoomOwner = isOwner && room.HotelId == hotel.Id;
 
-        <div class="col-md-4 mb-3">
+        <div class="col-md-3 col-sm-6  mb-4">
             <div class="card room-card">
                 @if (room.RoomPicture != null && room.RoomPicture.Length > 0)
                 {
@@ -89,19 +90,19 @@
                     <p class="card-text">Beds: @room.BedsNumber</p>
                     <p class="card-text">Price per Night: @room.PricePerNight:$</p>
                 </div>
-
-                <div class="room-actions">
+                <div class="room-actions d-flex justify-content-start gap-2">
                     @if (isRoomOwner)
                     {
-                        <a href="@Url.Action("RoomDetails", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-details">Details</a>
-                        <a href="@Url.Action("UpdateRoom", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-update">Update</a>
-                        <a href="@Url.Action("DeleteRoom", "Hotel", new { roomId = room.Id })" class="btn btn-action btn-delete">Delete</a>
+                        <a href="@Url.Action("RoomDetails", "Hotel", new { Id = room.Id })" class="btn btn-action btn-primary">Details</a>
+                        <a href="@Url.Action("UpdateRoom", "Hotel", new { Id = room.Id })" class="btn btn-action btn-primary">Update</a>
+                        <a href="@Url.Action("DeleteRoom", "Hotel", new { Id = room.Id })" class="btn btn-action btn-delete">Delete</a>
                     }
                     else
                     {
                         <a href="@Url.Action("CreateReservation", "Customer", new { id = room.Id })" class="btn btn-action btn-reserve">Add Reservation</a>
                     }
                 </div>
+
             </div>
         </div>
     }
