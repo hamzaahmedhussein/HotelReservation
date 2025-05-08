@@ -70,5 +70,27 @@ namespace HotelReservation.Controllers
             var roomsResult = new HomePagePagedResult<RoomViewModel>(rooms, totalRoomsCount, model.PageNumber, model.PageSize, model);
             return View(roomsResult);
         }
+
+        [HttpGet]
+        public IActionResult Contact()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        public IActionResult ContactSubmit()
+        {
+            return RedirectToAction("index");
+        }
+
+        [HttpGet]
+        public IActionResult About()
+        {
+            return View();
+        }
+     
     }
+    
+    
+    
 }

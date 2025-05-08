@@ -91,39 +91,54 @@
         {
             var isRoomOwner = isOwner && room.HotelId == hotel.Id;
 
-            <div class="col-md-3 col-sm-6  mb-4">
-                <div class="card room-card">
-                    @if (room.RoomPicture != null && room.RoomPicture.Length > 0)
-                    {
-                        var base64Image = Convert.ToBase64String(room.RoomPicture);
-                        <img src="data:image/jpeg;base64,@base64Image" class="card-img-top room-image" alt="Room Picture">
-                    }
-                    else
-                    {
-                        <div class="card-img-top d-flex justify-content-center align-items-center" style="height: 200px; background-color: #f0f0f0;">
-                            <span class="text-muted">No Image</span>
-                        </div>
-                    }
-                    <div class="room-details">
-                        <h5 class="card-title">Room Number: @room.RoomNumber</h5>
-                        <p class="card-text">Beds: @room.BedsNumber</p>
-                        <p class="card-text">Price per Night: @room.PricePerNight:$</p>
-                    </div>
-                    <div class="room-actions d-flex justify-content-start gap-2">
-                        @if (isRoomOwner)
-                        {
-                            <a href="@Url.Action("RoomDetails", "Hotel", new { Id = room.Id })" class="btn btn-action btn-primary">Details</a>
-                            <a href="@Url.Action("UpdateRoom", "Hotel", new { Id = room.Id })" class="btn btn-action btn-primary">Update</a>
-                            <a href="@Url.Action("DeleteRoom", "Hotel", new { Id = room.Id })" class="btn btn-action btn-delete">Delete</a>
-                        }
-                        else
-                        {
-                            <a href="@Url.Action("CreateReservation", "Customer", new { id = room.Id })" class="btn btn-action btn-reserve">Add Reservation</a>
-                        }
-                    </div>
-
-                </div>
+<div class="col-md-3 col-sm-6 mb-4">
+    <div class="card shadow-sm border-0 rounded-lg overflow-hidden">
+        @if (room.RoomPicture != null && room.RoomPicture.Length > 0)
+        {
+            var base64Image = Convert.ToBase64String(room.RoomPicture);
+            <img src="data:image/jpeg;base64,@base64Image" class="card-img-top" alt="Room Picture" style="height: 200px; object-fit: cover;">
+        }
+        else
+        {
+            <div class="card-img-top d-flex justify-content-center align-items-center bg-light" style="height: 200px;">
+                <span class="text-muted">No Image Available</span>
             </div>
+        }
+
+       
+        <div class="card-body text-center">
+            <h5 class="card-title mb-2 fw-bold text-dark">Room #@room.RoomNumber</h5>
+            <p class="card-text mb-1 text-muted">
+                <i class="fas fa-bed me-1 text-secondary"></i> Beds: <span class="fw-semibold text-dark">@room.BedsNumber</span>
+            </p>
+            <p class="card-text mb-3 text-muted">
+                <i class="fas fa-dollar-sign me-1 text-success"></i> Price per Night: <span class="fw-semibold text-dark">$@room.PricePerNight</span>
+            </p>
+
+
+            <div class="d-flex gap-2 justify-content-center">
+                @if (isRoomOwner)
+                {
+                    <a href="@Url.Action("RoomDetails", "Hotel", new { Id = room.Id })" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-info-circle me-1"></i> Details
+                    </a>
+                    <a href="@Url.Action("UpdateRoom", "Hotel", new { Id = room.Id })" class="btn btn-outline-warning btn-sm">
+                        <i class="fas fa-edit me-1"></i> Update
+                    </a>
+                    <a href="@Url.Action("DeleteRoom", "Hotel", new { Id = room.Id })" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-trash me-1"></i> Delete
+                    </a>
+                }
+                else
+                {
+                    <a href="@Url.Action("CreateReservation", "Customer", new { id = room.Id })" class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-calendar-plus me-1"></i> Add Reservation
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
         }
     </div>
 

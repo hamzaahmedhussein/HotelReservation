@@ -290,13 +290,13 @@ namespace HotelReservation.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "319ffbf9-e6b8-4787-81df-61e52b135573",
+                            Id = "6994ff29-6841-4b78-a2ef-07db9b298b3a",
                             Name = "Customer",
                             NormalizedName = "Customer"
                         },
                         new
                         {
-                            Id = "b90e4169-4f56-4a46-a5cf-2b4029a14a99",
+                            Id = "cc3705b7-3299-4747-8b3a-6c69e77d0592",
                             Name = "Hotel",
                             NormalizedName = "Hotel"
                         });
